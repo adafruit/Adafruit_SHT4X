@@ -229,7 +229,7 @@ bool Adafruit_SHT4x::getEvent(sensors_event_t *humidity,
   _temperature = -45 + 175 * t_ticks / 65535;
   _humidity = -6 + 125 * rh_ticks / 65535;
 
-  _humidity = min(max(_humidity, 0), 100);
+  _humidity = min(max(_humidity, 0.0), 100.0);
 
   // use helpers to fill in the events
   if (temp)
