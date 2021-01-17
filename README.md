@@ -6,7 +6,7 @@ This is a library for the SHT4X Digital Humidity + Temp sensor.
 
 It is designed specifically to work with the SHT4X Digital in the Adafruit shop:
 
-* https://www.adafruit.com/products/4636
+* https://www.adafruit.com/products/4885
 
 These sensors use **I2C** to communicate, 2 pins are required to interface
 
