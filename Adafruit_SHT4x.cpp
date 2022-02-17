@@ -139,7 +139,7 @@ sht4x_precision_t Adafruit_SHT4x::getPrecision(void) { return _precision; }
 /*!
     @brief  Sets the heating setting - more heating uses more power and takes
    longer
-    @param  heat The desired precision setting, will be used during reads
+    @param  heat The desired heater setting, will be used during reads
 */
 /**************************************************************************/
 void Adafruit_SHT4x::setHeater(sht4x_heater_t heat) { _heater = heat; }
@@ -268,7 +268,7 @@ Adafruit_Sensor *Adafruit_SHT4x::getHumiditySensor(void) {
 }
 
 /**
- * @brief Gets the Adafruit_Sensor object for the SHT4x's humidity sensor
+ * @brief Gets the Adafruit_Sensor object for the SHT4x's temperature sensor
  *
  * @return Adafruit_Sensor*
  */
@@ -337,7 +337,7 @@ bool Adafruit_SHT4x_Temp::getEvent(sensors_event_t *event) {
 }
 
 /**
- * Internal function to perform and I2C write.
+ * Internal function to perform an I2C write.
  *
  * @param cmd   The 16-bit command ID to send.
  */
