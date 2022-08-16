@@ -373,7 +373,7 @@ bool Adafruit_SHT4x::readCommand(uint16_t command, uint8_t *buffer,
  *
  * @return The computed CRC8 value.
  */
-static uint8_t crc8(const uint8_t *data, int len) {
+uint8_t crc8(const uint8_t *data, int len) {
   /*
    *
    * CRC-8 formula from page 14 of SHT spec pdf
