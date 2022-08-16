@@ -29,6 +29,8 @@
 
 #include "Adafruit_SHT4x.h"
 
+static uint8_t crc8(const uint8_t *data, int len);
+
 /*!
  * @brief  SHT4x constructor
  */

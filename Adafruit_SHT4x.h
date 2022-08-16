@@ -48,8 +48,6 @@
 #define SHT4x_READSERIAL 0x89 /**< Read Out of Serial Register */
 #define SHT4x_SOFTRESET 0x94  /**< Soft Reset */
 
-static uint8_t crc8(const uint8_t *data, int len);
-
 /** How precise (repeatable) the measurement will be */
 typedef enum {
   SHT4X_HIGH_PRECISION,
