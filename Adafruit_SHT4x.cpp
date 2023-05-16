@@ -255,7 +255,7 @@ void Adafruit_SHT4x::fillHumidityEvent(sensors_event_t *humidity,
   memset(humidity, 0, sizeof(sensors_event_t));
   humidity->version = sizeof(sensors_event_t);
   humidity->sensor_id = _sensorid_humidity;
-  humidity->type = SENSOR_TYPE_AMBIENT_TEMPERATURE;
+  humidity->type = SENSOR_TYPE_RELATIVE_HUMIDITY;
   humidity->timestamp = timestamp;
   humidity->relative_humidity = _humidity;
 }
