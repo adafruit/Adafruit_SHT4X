@@ -40,6 +40,9 @@ Adafruit_SHT4x::Adafruit_SHT4x(void) {}
  * @brief  SHT4x destructor
  */
 Adafruit_SHT4x::~Adafruit_SHT4x(void) {
+  if (i2c_dev) {
+    delete i2c_dev; // remove old interface
+  }
   if (temp_sensor) {
     delete temp_sensor;
   }
@@ -58,6 +61,12 @@ Adafruit_SHT4x::~Adafruit_SHT4x(void) {
 bool Adafruit_SHT4x::begin(TwoWire *theWire) {
   if (i2c_dev) {
     delete i2c_dev; // remove old interface
+  }
+  if (temp_sensor) {
+    delete temp_sensor;
+  }
+  if (humidity_sensor) {
+    delete humidity_sensor;
   }
 
   i2c_dev = new Adafruit_I2CDevice(SHT4x_DEFAULT_ADDR, theWire);
