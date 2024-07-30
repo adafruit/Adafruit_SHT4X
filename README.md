@@ -23,4 +23,4 @@ Check out the links above for our tutorials and wiring diagrams
 
 Use the Arduino Library Manager to install this library. If you're unfamiliar
 with how this works, we have a great tutorial on Arduino library installation
-at: http://learn.adafruit.com/adafruit-all-about-arduino-libraries-install-use
+at: https://learn.adafruit.com/adafruit-all-about-arduino-libraries-install-use
