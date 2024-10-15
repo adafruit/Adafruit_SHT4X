@@ -122,7 +122,16 @@ public:
   void setHeater(sht4x_heater_t heat);
   sht4x_heater_t getHeater(void);
 
+  float getTemperature(void);
+  float getHumidity(void);
+
   bool getEvent(sensors_event_t *humidity, sensors_event_t *temp);
+
+  /* non-blocking methods */
+  bool startEvent(void);
+  bool hasEvent(void);
+  void fillEvent(sensors_event_t *humidity, sensors_event_t *temp);
+
   Adafruit_Sensor *getTemperatureSensor(void);
   Adafruit_Sensor *getHumiditySensor(void);
 
@@ -152,6 +161,10 @@ private:
 
   void fillTempEvent(sensors_event_t *temp, uint32_t timestamp);
   void fillHumidityEvent(sensors_event_t *humidity, uint32_t timestamp);
+
+  /* non-blocking fields */
+  uint32_t _eventTimestamp; ///< Timestamp of last event
+  uint16_t _eventDuration;  ///< Duration of last event
 };
 
 #endif

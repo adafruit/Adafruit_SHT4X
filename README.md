@@ -1,3 +1,9 @@
+# Non-Blocking
+
+This fork adds the possibility to read the sensor in a non-blocking way using an approach similar to the [Arduino Blink Without Delay](https://www.arduino.cc/en/Tutorial/BuiltInExamples/BlinkWithoutDelay) example, while keeping the original functions.
+
+To use the non-blocking mode, simply call `sht4x.startEvent()` to start the measurement and then continuously check if the measurement is ready using `sht4x.hasEvent()`. If the measurement is ready, you can get the temperature and humidity using `sht4x.fillEvent()`.
+
 # Adafruit SHT4X Temperature and Humidity Sensor Breakout [![Build Status](https://github.com/adafruit/Adafruit_SHT4X/workflows/Arduino%20Library%20CI/badge.svg)](https://github.com/adafruit/Adafruit_SHT4X/actions)[![Documentation](https://github.com/adafruit/ci-arduino/blob/master/assets/doxygen_badge.svg)](http://adafruit.github.io/Adafruit_SHT4X/html/index.html)
 
 <a href="https://www.adafruit.com/product/4636"><img src="assets/board.jpg?raw=true" width="500px"></a>

@@ -166,7 +166,24 @@ sht4x_heater_t Adafruit_SHT4x::getHeater(void) { return _heater; }
 
 /**************************************************************************/
 /*!
-    @brief  Gets the humidity sensor and temperature values as sensor events
+    @brief  Gets the last temperature reading
+    @returns  The temperature in degrees C
+*/
+/**************************************************************************/
+float Adafruit_SHT4x::getTemperature(void) { return _temperature; }
+
+/**************************************************************************/
+/*!
+    @brief  Gets the last humidity reading
+    @returns  The relative humidity in percent
+*/
+/**************************************************************************/
+float Adafruit_SHT4x::getHumidity(void) { return _humidity; }
+
+/**************************************************************************/
+/*!
+    @brief  Gets the humidity sensor and temperature values as sensor events,
+    blocking until the measurement is available
     @param  humidity Sensor event object that will be populated with humidity
    data
     @param  temp Sensor event object that will be populated with temp data
@@ -175,58 +192,88 @@ sht4x_heater_t Adafruit_SHT4x::getHeater(void) { return _heater; }
 /**************************************************************************/
 bool Adafruit_SHT4x::getEvent(sensors_event_t *humidity,
                               sensors_event_t *temp) {
-  uint32_t t = millis();
+  if (!startEvent()) {
+    return false;
+  }
+  delay(_eventDuration);
+  if (!hasEvent()) {
+    return false;
+  }
+  fillEvent(humidity, temp);
+  return true;
+}
 
-  uint8_t readbuffer[6];
+/**************************************************************************/
+/*!
+    @brief  Starts the measurement of the humidity sensor and temperature values
+    @returns true if the event was successfully started
+*/
+/**************************************************************************/
+bool Adafruit_SHT4x::startEvent() {
+  _eventTimestamp = millis();
   uint8_t cmd = SHT4x_NOHEAT_HIGHPRECISION;
-  uint16_t duration = 10;
+  _eventDuration = 10;
 
   if (_heater == SHT4X_NO_HEATER) {
     if (_precision == SHT4X_HIGH_PRECISION) {
       cmd = SHT4x_NOHEAT_HIGHPRECISION;
-      duration = 10;
+      _eventDuration = 10;
     }
     if (_precision == SHT4X_MED_PRECISION) {
       cmd = SHT4x_NOHEAT_MEDPRECISION;
-      duration = 5;
+      _eventDuration = 5;
     }
     if (_precision == SHT4X_LOW_PRECISION) {
       cmd = SHT4x_NOHEAT_LOWPRECISION;
-      duration = 2;
+      _eventDuration = 2;
     }
   }
 
   if (_heater == SHT4X_HIGH_HEATER_1S) {
     cmd = SHT4x_HIGHHEAT_1S;
-    duration = 1100;
+    _eventDuration = 1100;
   }
   if (_heater == SHT4X_HIGH_HEATER_100MS) {
     cmd = SHT4x_HIGHHEAT_100MS;
-    duration = 110;
+    _eventDuration = 110;
   }
 
   if (_heater == SHT4X_MED_HEATER_1S) {
     cmd = SHT4x_MEDHEAT_1S;
-    duration = 1100;
+    _eventDuration = 1100;
   }
   if (_heater == SHT4X_MED_HEATER_100MS) {
     cmd = SHT4x_MEDHEAT_100MS;
-    duration = 110;
+    _eventDuration = 110;
   }
 
   if (_heater == SHT4X_LOW_HEATER_1S) {
     cmd = SHT4x_LOWHEAT_1S;
-    duration = 1100;
+    _eventDuration = 1100;
   }
   if (_heater == SHT4X_LOW_HEATER_100MS) {
     cmd = SHT4x_LOWHEAT_100MS;
-    duration = 110;
+    _eventDuration = 110;
   }
 
-  if (!i2c_dev->write(&cmd, 1)) {
+  return i2c_dev->write(&cmd, 1);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Checks if the sensor should have completed the measurement and
+    the sensor event is available, and if so, reads the data from the sensor
+    @returns true if the measurement event was completed and data was read
+    successfully
+*/
+/**************************************************************************/
+bool Adafruit_SHT4x::hasEvent() {
+  // return quickly if we're not due for a read
+  if (millis() - _eventTimestamp < _eventDuration)
     return false;
-  }
-  delay(duration);
+
+  uint8_t readbuffer[6];
+
   if (!i2c_dev->read(readbuffer, 6)) {
     return false;
   }
@@ -242,12 +289,24 @@ bool Adafruit_SHT4x::getEvent(sensors_event_t *humidity,
 
   _humidity = min(max(_humidity, (float)0.0), (float)100.0);
 
+  return true;
+}
+
+/**************************************************************************/
+/*!
+    @brief  Fills a sensor event with the latest humidity and temperature data
+    @param  humidity Sensor event object that will be populated with humidity
+    data
+    @param  temp Sensor event object that will be populated with temp data
+*/
+/**************************************************************************/
+void Adafruit_SHT4x::fillEvent(sensors_event_t *humidity,
+                               sensors_event_t *temp) {
   // use helpers to fill in the events
   if (temp)
-    fillTempEvent(temp, t);
+    fillTempEvent(temp, _eventTimestamp);
   if (humidity)
-    fillHumidityEvent(humidity, t);
-  return true;
+    fillHumidityEvent(humidity, _eventTimestamp);
 }
 
 void Adafruit_SHT4x::fillTempEvent(sensors_event_t *temp, uint32_t timestamp) {
