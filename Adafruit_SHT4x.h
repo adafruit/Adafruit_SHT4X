@@ -113,7 +113,7 @@ public:
   Adafruit_SHT4x(void);
   ~Adafruit_SHT4x(void);
 
-  bool begin(TwoWire *theWire = &Wire);
+  bool begin(TwoWire *theWire = &Wire, uint8_t address = SHT4x_DEFAULT_ADDR);
   uint32_t readSerial(void);
   bool reset(void);
 
